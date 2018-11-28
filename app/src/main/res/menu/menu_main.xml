@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.vishnu.anon.balanceit.MainActivity">
+    <item
+        android:id="@+id/home_button"
+        android:orderInCategory="100"
+        android:title="@string/home"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_service_button"
+        android:orderInCategory="100"
+        android:title="@string/add_section"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_bank_option"
+        android:orderInCategory="100"
+        android:title="@string/add_bank"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/delete_service_button"
+        android:orderInCategory="100"
+        android:title="@string/delete_section"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/import_export"
+        android:orderInCategory="100"
+        android:title="@string/import_db"
+        app:showAsAction="never" />
+</menu>

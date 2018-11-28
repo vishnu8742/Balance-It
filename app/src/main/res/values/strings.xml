@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Balance It</string>
+    <string name="home">Home</string>
+    <string name="action_settings">Settings</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdrawal">withdraw</string>
+    <string name="cash_in_hand">Cash</string>
+    <string name="cash_at_bank">Cash in Bank</string>
+    <string name="add_section">Add Section</string>
+    <string name="delete_section">Delete Section</string>
+    <string name="submit">S U B M I T</string>
+    <string name="delete">D E L E T E</string>
+    <string name="commission">C O M M I S S I O N</string>
+    <string name="bank">B A N K</string>
+    <string name="transaction">Make A Transaction</string>
+    <string name="add_bank">Add Bank/Source</string>
+    <string name="import_db">Import/Export DB</string>
+    <string name="export_db">Export DB</string>
+    <string name="amount">A M O U N T</string>
+    <string name="service">S E R V I C E</string>
+</resources>
