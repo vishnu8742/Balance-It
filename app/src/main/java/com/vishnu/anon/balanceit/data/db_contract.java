@@ -34,13 +34,10 @@ public class db_contract implements BaseColumns {
 
         public final static String CASH_AT_BANK = "cash_at_bank";
 
-        public final static String UPDATED = "updates_at";
-
         public final static String TABLE_BANK = "banks";
 
         public final static String BANK_NAMES = "names";
 
-        public final static String BANK_UPDATED = "updated_at";
 
     }
 }

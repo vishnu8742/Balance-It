@@ -21,6 +21,10 @@
         </activity>
         <activity android:name=".transaction"></activity>
         <activity android:name=".add_bank"></activity>
+        <provider
+            android:name=".data.db_provider"
+            android:authorities="com.vishnu.anon.balanceit.bank"
+            android:exported="false" />
     </application>
 
 </manifest>
