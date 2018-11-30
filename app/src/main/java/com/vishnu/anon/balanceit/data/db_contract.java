@@ -1,5 +1,6 @@
 package com.vishnu.anon.balanceit.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class db_contract implements BaseColumns {
@@ -7,6 +8,15 @@ public class db_contract implements BaseColumns {
     private db_contract() {}
 
     public static final class trans implements BaseColumns {
+
+        /** The content URI to access the pet data in the provider */
+        public static final Uri CONTENT_BANK_URI = Uri.withAppendedPath(db_provider.BASE_CONTENT_URI, db_provider.BANK_URI);
+
+        public static final Uri CONTENT_SERV_URI = Uri.withAppendedPath(db_provider.BASE_CONTENT_URI, db_provider.SERVICE_URI);
+
+        public static final Uri CONTENT_BALANCE_URI = Uri.withAppendedPath(db_provider.BASE_CONTENT_URI, db_provider.BALANCE_URI);
+
+        public static final Uri CONTENT_TRANS_URI = Uri.withAppendedPath(db_provider.BASE_CONTENT_URI, db_provider.TRANSACTION_URI);
 
         public final static String TABLE_NAME_TRANS = "transactions";
 

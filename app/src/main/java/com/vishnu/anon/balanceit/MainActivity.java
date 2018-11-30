@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), add_bank.class);
             startActivity(intent);
         }else if (id == R.id.import_export){
-            return true;
+            Intent intent = new Intent(getApplicationContext(), import_export.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

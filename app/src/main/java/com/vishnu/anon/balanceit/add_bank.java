@@ -1,16 +1,25 @@
 package com.vishnu.anon.balanceit;
 
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.vishnu.anon.balanceit.data.db_contract.trans;
+
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class add_bank extends AppCompatActivity {
     Button submit;
@@ -33,9 +42,38 @@ public class add_bank extends AppCompatActivity {
               if(bank.isEmpty() && service.isEmpty()){
                   Toast.makeText(getApplicationContext(), "Dont Treat Me Like A Stupid", Toast.LENGTH_LONG).show();
               }else if(bank.isEmpty() && !service.isEmpty()){
-                  Toast.makeText(getApplicationContext(), "You Entered "+service+" Service", Toast.LENGTH_LONG).show();
+                  ContentValues values = new ContentValues();
+                  values.put(trans.SECTIONS, service);
+                  Uri newUri = getContentResolver().insert(trans.CONTENT_SERV_URI, values);
+
+                  // Show a toast message depending on whether or not the insertion was successful.
+                  if (newUri == null) {
+                      // If the new content URI is null, then there was an error with insertion.
+                      Toast.makeText(getApplicationContext(), "Failed",
+                              Toast.LENGTH_SHORT).show();
+                  } else {
+                      // Otherwise, the insertion was successful and we can display a toast.
+                      Toast.makeText(getApplicationContext(),"Success",
+                              Toast.LENGTH_SHORT).show();
+                  }
               }else if (!bank.isEmpty() && service.isEmpty()){
-                  Toast.makeText(getApplicationContext(), "You Entered "+bank+" Bank", Toast.LENGTH_LONG).show();
+                  Log.d("BANK", "onClick: " + bank);
+                  String time = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+                  ContentValues values = new ContentValues();
+                  values.put(trans.BANK_NAMES, bank);
+                  values.put(trans.TIME, time);
+                  Uri newUri = getContentResolver().insert(trans.CONTENT_BANK_URI, values);
+
+                  // Show a toast message depending on whether or not the insertion was successful.
+                  if (newUri == null) {
+                      // If the new content URI is null, then there was an error with insertion.
+                      Toast.makeText(getApplicationContext(), "Failed",
+                              Toast.LENGTH_SHORT).show();
+                  } else {
+                      // Otherwise, the insertion was successful and we can display a toast.
+                      Toast.makeText(getApplicationContext(),"Success" +newUri,
+                              Toast.LENGTH_SHORT).show();
+                  }
               }else if (!bank.isEmpty() && !service.isEmpty()){
                   Toast.makeText(getApplicationContext(), "Bank : "+bank+" Service : " +service, Toast.LENGTH_LONG).show();
               }

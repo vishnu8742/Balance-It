@@ -42,7 +42,7 @@ public class db_helper extends SQLiteOpenHelper {
         String BANKS_TABLE =  "CREATE TABLE " + db_contract.trans.TABLE_BANK + " ("
                 + db_contract.trans._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + db_contract.trans.BANK_NAMES + " TEXT NOT NULL, "
-                + db_contract.trans.TIME + " DEFAULT CURRENT_TIMESTAMP);";
+                + db_contract.trans.TIME + " TEXT NOT NULL);";
 
         // Create a String that contains the SQL statement to create the  table
         String BANK_BALANCE =  "CREATE TABLE " + db_contract.trans.TABLE_BALANCE + " ("

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="20sp"
+    android:layout_height="match_parent">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" Import"
+        android:id="@+id/importt"
+        android:gravity="center"
+        />
+    <Button
+        android:layout_below="@+id/importt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" Export"
+        android:id="@+id/exportt"
+        android:gravity="center"
+        />
+</RelativeLayout>
