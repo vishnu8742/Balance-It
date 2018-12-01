@@ -1,14 +1,27 @@
 package com.vishnu.anon.balanceit;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.vishnu.anon.balanceit.data.db_contract;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CheckBanks();
+        CheckServs();
+        CheckAccounts();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -27,6 +43,140 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private void CheckBanks(){
+        Log.d("CheckBanks", "CheckBanks: ");
+        String[] projection = {
+                db_contract.trans.BANK_NAMES
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        CursorLoader cursor = new CursorLoader(this,   // Parent activity context
+                db_contract.trans.CONTENT_BANK_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);
+
+        Cursor cursor1 = cursor.loadInBackground();
+        if (cursor1 == null || cursor1.getCount() < 1){
+            Log.d("", "add bank ");
+            AddBank();
+        }
+        cursor.cancelLoad();
+        cursor1.close();
+    }
+
+    private void CheckServs(){
+        Log.d("Servs", "CheckServs: ");
+        String[] projection = {
+                db_contract.trans.SECTIONS
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        CursorLoader cursor = new CursorLoader(this,   // Parent activity context
+                db_contract.trans.CONTENT_SERV_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);
+
+        Cursor cursor2 = cursor.loadInBackground();
+        if (cursor2 == null || cursor2.getCount() < 1){
+            Log.d("", "add serv");
+            AddService();
+        }
+        cursor.cancelLoad();
+        cursor2.close();
+    }
+    private void CheckAccounts(){
+        Log.d("Check ACCS", "ACCS: ");
+        String[] projection = {
+                db_contract.trans.ACCOUNT_NAMES
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        CursorLoader cursor = new CursorLoader(this,   // Parent activity context
+                db_contract.trans.CONTENT_BALANCE_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);
+
+        Cursor cursor3 = cursor.loadInBackground();
+        if (cursor3 == null || cursor3.getCount() < 1){
+            Log.d("", "add bank ");
+            AddAccount();
+        }
+        cursor.cancelLoad();
+        cursor3.close();
+    }
+
+    private void AddAccount(){
+        Log.d("", "Add Account: ");
+        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+        List<String> list = new ArrayList<String>();
+        list.add("CASH AT BANK");
+        list.add("CASH IN HAND");
+        List<Integer> bal = new ArrayList<>();
+        bal.add(0);
+        bal.add(0);
+        List<String> times = new ArrayList<>();
+        times.add(time);
+        times.add(time);
+        for (int i = 0; i <= 1; i++){
+            ContentValues values = new ContentValues();
+            values.put(db_contract.trans.ACCOUNT_NAMES, list.get(i));
+            values.put(db_contract.trans.ACCOUNT_BALANCE, bal.get(i));
+            values.put(db_contract.trans.TIME, times.get(i));
+
+            Uri newUri = getContentResolver().insert(db_contract.trans.CONTENT_BALANCE_URI, values);
+
+            // Show a toast message depending on whether or not the insertion was successful.
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(getApplicationContext(), "Default Sections Added", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void AddBank(){
+        Log.d("", "AddBank: ");
+        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+        ContentValues values = new ContentValues();
+        values.put(db_contract.trans.BANK_NAMES, "SELECT BANK");
+        values.put(db_contract.trans.TIME, time);
+        Uri newUri = getContentResolver().insert(db_contract.trans.CONTENT_BANK_URI, values);
+
+        // Show a toast message depending on whether or not the insertion was successful.
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(getApplicationContext(), "Failed",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(),"Default Sections Added",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void AddService(){
+        Log.d("", "AddService: ");
+        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+        ContentValues values = new ContentValues();
+        values.put(db_contract.trans.SECTIONS, "SELECT SERVICE");
+        values.put(db_contract.trans.TIME, time);
+        Uri newUri = getContentResolver().insert(db_contract.trans.CONTENT_SERV_URI, values);
+
+        // Show a toast message depending on whether or not the insertion was successful.
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(getApplicationContext(), "Failed" ,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

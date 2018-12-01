@@ -127,7 +127,7 @@ public class import_export extends AppCompatActivity {
     private boolean checkPermissions() {
 
         if (!isExternalStorageReadable() || !isExternalStorageWritable()) {
-            Toast.makeText(this, "To Backup/Restore Please Grant Storage Permission",
+            Toast.makeText(this, "పర్మిషన్ లేకపోతే ఫైల్ ఎలా సేవ్ చెయ్యాలి చెప్పు ???",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -154,10 +154,10 @@ public class import_export extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     permissionGranted = true;
-                    Toast.makeText(this, "Voila, Now You can Backup/Restore.",
+                    Toast.makeText(this, "ఇచ్చేసావా , ఇంకెందుకు ఆలస్యం.",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Storage Permission is must for export/import feature", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "పర్మిషన్ ఇవ్వకపోతే BACK UP తీస్కోడం కుదరదు ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(import_export.this, MainActivity.class);
                     startActivity(intent);
                 }

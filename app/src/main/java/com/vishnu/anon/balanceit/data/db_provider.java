@@ -84,7 +84,6 @@ public class db_provider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case BALANCES:
-
                 cursor = database.query(db_contract.trans.TABLE_BALANCE, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case TRANSACTIONS:
@@ -147,7 +146,27 @@ public class db_provider extends ContentProvider {
     }
 
     private Uri insertBal(Uri uri, ContentValues values) {
-        return uri;
+
+        Log.d("InsertBal", "Insert: " + uri);
+        String name = values.getAsString(db_contract.trans.ACCOUNT_NAMES);
+        if (name == null) {
+            throw new IllegalArgumentException("Name Must Man");
+        }
+        SQLiteDatabase database = DBhelper.getWritableDatabase();
+
+        // Insert the new pet with the given values
+        long id = database.insert(db_contract.trans.TABLE_BALANCE, null, values);
+        // If the ID is -1, then the insertion failed. Log an error and return null.
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        // Notify all listeners that the data has changed for the pet content URI
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Return the new URI with the ID (of the newly inserted row) appended at the end
+        return ContentUris.withAppendedId(uri, id);
     }
 
     private Uri insertBanks(Uri uri, ContentValues values) {
@@ -174,7 +193,27 @@ public class db_provider extends ContentProvider {
     }
 
     private Uri insertServ(Uri uri, ContentValues values) {
-        return uri;
+        Log.d("InsertServices", "insertServices: " + uri);
+        String name = values.getAsString(db_contract.trans.SECTIONS);
+        if (name == null) {
+            throw new IllegalArgumentException("Name Must Man");
+        }
+        SQLiteDatabase database = DBhelper.getWritableDatabase();
+
+        // Insert the new pet with the given values
+        long id = database.insert(db_contract.trans.TABLE_SECTION, null, values);
+        // If the ID is -1, then the insertion failed. Log an error and return null.
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        // Notify all listeners that the data has changed for the pet content URI
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Return the new URI with the ID (of the newly inserted row) appended at the end
+        return ContentUris.withAppendedId(uri, id);
+
     }
 
     @Override

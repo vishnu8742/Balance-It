@@ -30,13 +30,13 @@ public class db_helper extends SQLiteOpenHelper {
                 + db_contract.trans.TYPE + " TEXT NOT NULL, "
                 + db_contract.trans.BANK_NAME + " TEXT NOT NULL, "
                 + db_contract.trans.SERVICE + " TEXT NOT NULL, "
-                + db_contract.trans.TIME + " DEFAULT CURRENT_TIMESTAMP);";
+                + db_contract.trans.TIME + " TEXT NOT NULL);";
 
         // Create a String that contains the SQL statement to create the  table
         String BANK_SERVICES_TABLE =  "CREATE TABLE " + db_contract.trans.TABLE_SECTION + " ("
                 + db_contract.trans._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + db_contract.trans.SECTIONS + " TEXT NOT NULL, "
-                + db_contract.trans.TIME + " DEFAULT CURRENT_TIMESTAMP);";
+                + db_contract.trans.TIME + " TEXT NOT NULL);";
 
         // Create a String that contains the SQL statement to create the  table
         String BANKS_TABLE =  "CREATE TABLE " + db_contract.trans.TABLE_BANK + " ("
@@ -47,9 +47,9 @@ public class db_helper extends SQLiteOpenHelper {
         // Create a String that contains the SQL statement to create the  table
         String BANK_BALANCE =  "CREATE TABLE " + db_contract.trans.TABLE_BALANCE + " ("
                 + db_contract.trans._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + db_contract.trans.CASH_AT_BANK + " INTEGER NOT NULL, "
-                + db_contract.trans.CASH_IN_HAND + " INTEGER NOT NULL, "
-                + db_contract.trans.TIME + " DEFAULT CURRENT_TIMESTAMP);";
+                + db_contract.trans.ACCOUNT_NAMES + " TEXT NOT NULL, "
+                + db_contract.trans.ACCOUNT_BALANCE + " INTEGER NOT NULL, "
+                + db_contract.trans.TIME + " TEXT NOT NULL);";
 
         // Execute the SQL statement
         db.execSQL(BANK_BALANCE);

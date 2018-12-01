@@ -31,19 +31,29 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transaction);
+        bank = findViewById(R.id.bank);
+        service = findViewById(R.id.service);
         loadBanks();
         loadServices();
         getSupportActionBar().setTitle("Add Transaction");
         deposit = (Button) findViewById(R.id.deposit_button);
         withdraw = (Button) findViewById(R.id.withdraw_button);
+        amount = findViewById(R.id.amount);
+        commisiion = findViewById(R.id.commission);
         bank.setOnItemSelectedListener(this);
         service.setOnItemSelectedListener(this);
         deposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 amount.getText().toString().trim();
                 commisiion.getText().toString().trim();
-                Toast.makeText(getApplicationContext(), "CLICKED ON DEPOSIT", Toast.LENGTH_SHORT).show();
+//                if(commisiion.length() < 0){
+//                    commisiion.setText("0");
+//                }
+            if(amount.length() < 1 && commisiion.length() < 1 && bank_name.equals("SELECT BANK") && service_name.equals("SELECT SERVICE")){
+                    Toast.makeText(getApplicationContext(), "ADD DETAILS MAN", Toast.LENGTH_SHORT).show();
+            }
             }
         });
 
@@ -76,23 +86,23 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                 null);
 
         Cursor c = cursor.loadInBackground();
-        if(c.moveToFirst())
-        {
-            do {
-                banks.add(c.getString(0));
-            }while (c.moveToNext());
-        }
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                do {
+                    banks.add(c.getString(0));
+                } while (c.moveToNext());
+            }
 
-        if(banks.isEmpty()){
-            Toast.makeText(this, "No Banks Listed", Toast.LENGTH_SHORT).show();
-        }else {
-            // Creating adapter for spinner
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, banks);
-            //Type of spinner
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Creating adapter for spinner
+                ArrayAdapter<String> bankAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, banks);
+                //Type of spinner
+                bankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            // attaching data adapter to spinner
-            bank.setAdapter(dataAdapter);
+                // attaching data adapter to spinner
+                bank.setAdapter(bankAdapter);
+
+        }else{
+            Toast.makeText(getApplicationContext(), "No Banks Added Yet", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -115,24 +125,24 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                 null);
 
         Cursor c = cursor.loadInBackground();
-        if(c.moveToFirst())
-        {
-            do {
-                servs.add(c.getString(0));
-            }while (c.moveToNext());
-        }
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                do {
+                    servs.add(c.getString(0));
+                } while (c.moveToNext());
+            }
 
-        if(servs.isEmpty()){
-            Toast.makeText(this, "No Cats Available", Toast.LENGTH_SHORT).show();
-        }else {
 
-            // Creating adapter for spinner
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servs);
-            //Type of spinner
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Creating adapter for spinner
+                ArrayAdapter<String> servAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, servs);
+                //Type of spinner
+                servAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            // attaching data adapter to spinner
-            service.setAdapter(dataAdapter);
+                // attaching data adapter to spinner
+                service.setAdapter(servAdapter);
+
+        }else{
+            Toast.makeText(getApplicationContext(), "No Services Added Yet", Toast.LENGTH_SHORT).show();
         }
     }
 

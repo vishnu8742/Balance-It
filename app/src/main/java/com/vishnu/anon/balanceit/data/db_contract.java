@@ -40,9 +40,9 @@ public class db_contract implements BaseColumns {
 
         public final static String TABLE_BALANCE = "balances";
 
-        public final static String CASH_IN_HAND = "cash_in_hand";
+        public final static String ACCOUNT_NAMES = "account_names";
 
-        public final static String CASH_AT_BANK = "cash_at_bank";
+        public final static String ACCOUNT_BALANCE = "account_balance";
 
         public final static String TABLE_BANK = "banks";
 
