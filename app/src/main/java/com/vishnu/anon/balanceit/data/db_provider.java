@@ -223,6 +223,34 @@ public class db_provider extends ContentProvider {
 
     @Override
     public int update(Uri uri,  ContentValues values, String selection,  String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case TRANSACTIONS:
+                return updateBal(uri, values, selection, selectionArgs);
+            case BALANCES:
+                return updateBal(uri, values, selection, selectionArgs);
+            case BANKS:
+                return updateBal(uri, values, selection, selectionArgs);
+            case SERVICES:
+                return updateBal(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
+    }
+
+    private int updateBal(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        SQLiteDatabase database = DBhelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = database.update(db_contract.trans.TABLE_BALANCE, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
     }
 }
