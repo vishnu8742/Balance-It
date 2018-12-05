@@ -227,9 +227,174 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
         withdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                amount.getText().toString().trim();
-                commisiion.getText().toString().trim();
-                Toast.makeText(getApplicationContext(), "CLICKED ON WITHDRAW", Toast.LENGTH_SHORT).show();
+                try {
+                    type = "withdraw";
+                    amount_value = 0; commission_value = 0;
+                    amount_value = Integer.parseInt(amount.getText().toString().trim());
+                    commission_value = Integer.parseInt(commisiion.getText().toString().trim());
+                }catch (Exception e){
+                    Log.d("", String.valueOf(e));
+                }
+                Log.d("", "onClick: " + amount_value + "   " + commission_value + " " + bank_name + " " + service_name);
+                if(amount_value > 1  && !bank_name.equals("SELECT BANK") && !service_name.equals("SELECT SERVICE")){
+                    Toast.makeText(getApplicationContext(), "All Good", Toast.LENGTH_SHORT).show();
+                    String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+                    String[] projection = {
+                            trans.ACCOUNT_NAMES,
+                            trans.ACCOUNT_BALANCE
+                    };
+                    String where = trans.ACCOUNT_NAMES + "=?";
+                    String[] whereArgs = new String[] {String.valueOf(bank_name)};
+
+                    CursorLoader cursorLoader =  new CursorLoader(getApplicationContext(),
+                            trans.CONTENT_BALANCE_URI,
+                            projection,
+                            where,
+                            whereArgs,
+                            null);
+                    Cursor getbalance = cursorLoader.loadInBackground();
+                    if (getbalance != null && getbalance.getCount() > 0) {
+                        if (getbalance.moveToFirst()) {
+                            do {
+                                present_balance = Integer.parseInt(getbalance.getString(1));
+                            } while (getbalance.moveToNext());
+                        }
+                    }
+                    cursorLoader.cancelLoad();
+                    Log.d("", "Present Balance " + bank_name + " : " + present_balance);
+                    if (present_balance > amount_value){
+                        new_balance = present_balance + amount_value;
+                        String[] tables = {
+                                trans.ACCOUNT_NAMES,
+                                trans.ACCOUNT_BALANCE
+                        };
+                        String from = trans.ACCOUNT_NAMES + "=?";
+                        String[] values = new String[] {"CASH AT BANK"};
+
+                        CursorLoader cursor =  new CursorLoader(getApplicationContext(),
+                                trans.CONTENT_BALANCE_URI,
+                                tables,
+                                from,
+                                values,
+                                null);
+                        Cursor getdata = cursorLoader.loadInBackground();
+                        if (getdata != null && getdata.getCount() > 0) {
+                            if (getdata.moveToFirst()) {
+                                do {
+                                    total_bank_balance = Integer.parseInt(getdata.getString(1));
+                                } while (getdata.moveToNext());
+                            }
+                        }
+                        cursor.cancelLoad();
+
+                        String[] cash_projection = {
+                                trans.ACCOUNT_NAMES,
+                                trans.ACCOUNT_BALANCE
+                        };
+                        String cash_where = trans.ACCOUNT_NAMES + "=?";
+                        String[] cash_where_args = new String[] {"CASH IN HAND"};
+
+                        CursorLoader cash_cursor =  new CursorLoader(getApplicationContext(),
+                                trans.CONTENT_BALANCE_URI,
+                                cash_projection,
+                                cash_where,
+                                cash_where_args,
+                                null);
+
+                        Cursor get_cash = cash_cursor.loadInBackground();
+                        if (get_cash != null && get_cash.getCount() > 0) {
+                            if (get_cash.moveToFirst()) {
+                                do {
+                                    previous_cash = Integer.parseInt(get_cash.getString(1));
+                                } while (get_cash.moveToNext());
+                            }
+                        }
+                        cursorLoader.cancelLoad();
+
+                        new_cash = previous_cash - amount_value;
+
+                        new_total_bank_balance = total_bank_balance + amount_value;
+
+                        Log.d("", "New cash " + new_cash + " Total Bank " + new_total_bank_balance);
+
+                        ContentValues update_values = new ContentValues();
+                        update_values.put(trans.ACCOUNT_BALANCE, new_balance);
+
+                        int rowsAffected = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_values, where, whereArgs);
+
+                        if (rowsAffected == 0) {
+                            // If no rows were affected, then there was an error with the update.
+                            Toast.makeText(getApplicationContext(), "Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Otherwise, the update was successful and we can display a toast.
+                            Toast.makeText(getApplicationContext(), "Success",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        String[] update_where = new String[] {"CASH AT BANK"};
+
+                        ContentValues update_total_values = new ContentValues();
+                        update_total_values.put(trans.ACCOUNT_BALANCE, new_total_bank_balance);
+
+                        int rowsUpdated = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_total_values, from, update_where);
+
+                        if (rowsUpdated == 0) {
+                            // If no rows were affected, then there was an error with the update.
+                            Toast.makeText(getApplicationContext(), "Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Otherwise, the update was successful and we can display a toast.
+                            Toast.makeText(getApplicationContext(), "Success",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        ContentValues update_total_cash = new ContentValues();
+                        update_total_cash.put(trans.ACCOUNT_BALANCE, new_cash);
+
+                        int cashUpdated = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_total_cash, cash_where, cash_where_args);
+
+                        if (cashUpdated == 0) {
+                            // If no rows were affected, then there was an error with the update.
+                            Toast.makeText(getApplicationContext(), "Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Otherwise, the update was successful and we can display a toast.
+                            Toast.makeText(getApplicationContext(), "Success",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        ContentValues transaction = new ContentValues();
+                        transaction.put(trans.AMOUNT, amount_value);
+                        transaction.put(trans.COMMISSION, commission_value);
+                        transaction.put(trans.TYPE, type);
+                        transaction.put(trans.BANK_NAME, bank_name);
+                        transaction.put(trans.SERVICE, service_name);
+                        transaction.put(trans.TIME, time);
+
+                        Uri newUri = getContentResolver().insert(trans.CONTENT_TRANS_URI, transaction);
+
+                        // Show a toast message depending on whether or not the insertion was successful.
+                        if (newUri == null) {
+                            // If the new content URI is null, then there was an error with insertion.
+                            Toast.makeText(getApplicationContext(), "Failed" ,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Otherwise, the insertion was successful and we can display a toast.
+                            Toast.makeText(getApplicationContext(),"Success",
+                                    Toast.LENGTH_SHORT).show();
+                            amount.getText().clear();
+                            commisiion.getText().clear();
+                            bank.setSelection(0);
+                            service.setSelection(0);
+                        }
+
+                    }else {
+                        Toast.makeText(getApplicationContext(), " Funds are less in " + bank_name + " account", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "ADD DETAILS MAN", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

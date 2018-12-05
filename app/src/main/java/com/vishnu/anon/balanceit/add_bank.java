@@ -1,10 +1,13 @@
 package com.vishnu.anon.balanceit;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.util.Log;
@@ -26,6 +29,7 @@ public class add_bank extends AppCompatActivity {
     EditText bank_name, amount;
     EditText service_name;
     RelativeLayout layout;
+    int total_balance;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +109,67 @@ public class add_bank extends AppCompatActivity {
             bank_name.getText().clear();
             amount.setText("0");
             service_name.getText().clear();
+        }
+
+        String[] tables = {
+                trans.ACCOUNT_NAMES,
+                trans.ACCOUNT_BALANCE
+        };
+        String from = trans.ACCOUNT_NAMES + "=?";
+        String[] bank_amount = new String[] {"CASH AT BANK"};
+
+        CursorLoader cursor =  new CursorLoader(getApplicationContext(),
+                trans.CONTENT_BALANCE_URI,
+                tables,
+                from,
+                bank_amount,
+                null);
+        Cursor getdata = cursor.loadInBackground();
+        if (getdata != null && getdata.getCount() > 0) {
+            if (getdata.moveToFirst()) {
+                do {
+                    total_balance = Integer.parseInt(getdata.getString(1));
+                } while (getdata.moveToNext());
+            }
+        }
+        cursor.cancelLoad();
+
+        int total_in_bank = initamount + total_balance;
+
+        ContentValues update_values = new ContentValues();
+        update_values.put(trans.ACCOUNT_BALANCE, total_in_bank);
+
+        int rowsAffected = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_values, from, bank_amount);
+
+        if (rowsAffected == 0) {
+            // If no rows were affected, then there was an error with the update.
+            Toast.makeText(getApplicationContext(), "Failed",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the update was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(), "Success",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        ContentValues transaction = new ContentValues();
+        transaction.put(trans.AMOUNT, initamount);
+        transaction.put(trans.COMMISSION, "0");
+        transaction.put(trans.TYPE, "Bank Added");
+        transaction.put(trans.BANK_NAME, bank);
+        transaction.put(trans.SERVICE, "None");
+        transaction.put(trans.TIME, time);
+
+        Uri transAdd = getContentResolver().insert(trans.CONTENT_TRANS_URI, transaction);
+
+        // Show a toast message depending on whether or not the insertion was successful.
+        if (transAdd == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(getApplicationContext(), "Failed" ,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(),"Success",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
