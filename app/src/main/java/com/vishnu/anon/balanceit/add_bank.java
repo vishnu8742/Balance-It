@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class add_bank extends AppCompatActivity {
     Button submit;
-    EditText bank_name;
+    EditText bank_name, amount;
     EditText service_name;
     RelativeLayout layout;
     @Override
@@ -32,6 +32,7 @@ public class add_bank extends AppCompatActivity {
         setContentView(R.layout.add_bank);
         bank_name = findViewById(R.id.bank_name);
         service_name = findViewById(R.id.service_name);
+        amount = findViewById(R.id.initamount);
         layout = (RelativeLayout) findViewById(R.id.relative_layout);
         submit = findViewById(R.id.bank_button);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -39,14 +40,20 @@ public class add_bank extends AppCompatActivity {
             public void onClick(View v) {
               String bank = bank_name.getText().toString().trim();
               String service = service_name.getText().toString().trim();
+              int initamount = Integer.parseInt(amount.getText().toString().trim());
+              if (initamount < 0){
+                  initamount = 0;
+              }
               if(bank.isEmpty() && service.isEmpty()){
                   Toast.makeText(getApplicationContext(), "Dont Treat Me Like A Stupid", Toast.LENGTH_LONG).show();
               }else if(bank.isEmpty() && !service.isEmpty()){
                  AddService(service);
               }else if (!bank.isEmpty() && service.isEmpty()){
                   AddBank(bank);
+                  AddBankBalance(bank, initamount);
               }else if (!bank.isEmpty() && !service.isEmpty()){
                  AddBank(bank);
+                 AddBankBalance(bank, initamount);
                  AddService(service);
               }
 
@@ -71,6 +78,33 @@ public class add_bank extends AppCompatActivity {
             // Otherwise, the insertion was successful and we can display a toast.
             Toast.makeText(getApplicationContext(),"Success",
                     Toast.LENGTH_SHORT).show();
+            bank_name.getText().clear();
+            amount.setText("0");
+            service_name.getText().clear();
+        }
+    }
+
+    private void AddBankBalance(String bank, int initamount){
+        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+        bank = bank.toUpperCase();
+        ContentValues values = new ContentValues();
+        values.put(trans.ACCOUNT_NAMES, bank);
+        values.put(trans.ACCOUNT_BALANCE, initamount);
+        values.put(trans.TIME, time);
+        Uri newUri = getContentResolver().insert(trans.CONTENT_BALANCE_URI, values);
+
+        // Show a toast message depending on whether or not the insertion was successful.
+        if (newUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(getApplicationContext(), "Failed",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(getApplicationContext(),"Success",
+                    Toast.LENGTH_SHORT).show();
+            bank_name.getText().clear();
+            amount.setText("0");
+            service_name.getText().clear();
         }
     }
 
@@ -91,6 +125,9 @@ public class add_bank extends AppCompatActivity {
             // Otherwise, the insertion was successful and we can display a toast.
             Toast.makeText(getApplicationContext(),"Success",
                     Toast.LENGTH_SHORT).show();
+            bank_name.getText().clear();
+            amount.setText("0");
+            service_name.getText().clear();
         }
     }
 

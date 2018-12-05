@@ -37,8 +37,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/amountline"
+                android:layout_below="@+id/bank_name"
+                android:text="@string/amount"
+                android:textColor="@color/green"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="14dp"
+
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorAccent"
+                android:gravity="right"
+                android:text="0"
+                android:layout_below="@+id/amountline"
+                android:id="@+id/initamount"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/line2"
-                android:layout_below="@id/bank_name"
+                android:layout_below="@id/initamount"
                 android:text="@string/service"
                 android:textColor="@color/green"
                 android:fontFamily="sans-serif-condensed"
