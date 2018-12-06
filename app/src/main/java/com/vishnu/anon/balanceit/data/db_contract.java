@@ -32,6 +32,10 @@ public class db_contract implements BaseColumns {
 
         public final static String BANK_NAME = "bank_name";
 
+        public final static String CASH_IN_HAND = "cash_in_hand";
+
+        public final static String CASH_AT_BANK = "cash_at_bank";
+
         public final static String TIME = "time";
 
         public final static String TABLE_SECTION = "services";

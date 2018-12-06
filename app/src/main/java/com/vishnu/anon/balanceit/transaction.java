@@ -1,6 +1,7 @@
 package com.vishnu.anon.balanceit;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,7 +35,7 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
     Button deposit, withdraw;
     EditText amount, commisiion;
     Spinner service, bank;
-    private int amount_value, commission_value, present_balance, new_balance, total_bank_balance, new_total_bank_balance, previous_cash, new_cash;
+    private int amount_value,bank_present_cash, commission_value, present_balance, new_balance, total_bank_balance, new_total_bank_balance, previous_cash, new_cash;
     private String bank_name, service_name, type;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +65,6 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                 }
                 Log.d("", "onClick: " + amount_value + "   " + commission_value + " " + bank_name + " " + service_name);
             if(amount_value > 1  && !bank_name.equals("SELECT BANK") && !service_name.equals("SELECT SERVICE")){
-                Toast.makeText(getApplicationContext(), "All Good", Toast.LENGTH_SHORT).show();
                 String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
                 String[] projection = {
                         trans.ACCOUNT_NAMES,
@@ -103,7 +104,7 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                             from,
                             values,
                             null);
-                    Cursor getdata = cursorLoader.loadInBackground();
+                    Cursor getdata = cursor.loadInBackground();
                     if (getdata != null && getdata.getCount() > 0) {
                         if (getdata.moveToFirst()) {
                             do {
@@ -112,6 +113,7 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                         }
                     }
                     cursor.cancelLoad();
+                    Log.d("", "total_bank_balance" + total_bank_balance);
 
                     String[] cash_projection = {
                             trans.ACCOUNT_NAMES,
@@ -137,7 +139,7 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                     }
                     cursorLoader.cancelLoad();
 
-                    new_cash = previous_cash + amount_value;
+                    new_cash = previous_cash + amount_value + commission_value;
 
                     new_total_bank_balance = total_bank_balance - amount_value;
 
@@ -196,6 +198,8 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                     transaction.put(trans.TYPE, type);
                     transaction.put(trans.BANK_NAME, bank_name);
                     transaction.put(trans.SERVICE, service_name);
+                    transaction.put(trans.CASH_AT_BANK, total_bank_balance);
+                    transaction.put(trans.CASH_IN_HAND, new_cash);
                     transaction.put(trans.TIME, time);
 
                     Uri newUri = getContentResolver().insert(trans.CONTENT_TRANS_URI, transaction);
@@ -237,14 +241,13 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                 }
                 Log.d("", "onClick: " + amount_value + "   " + commission_value + " " + bank_name + " " + service_name);
                 if(amount_value > 1  && !bank_name.equals("SELECT BANK") && !service_name.equals("SELECT SERVICE")){
-                    Toast.makeText(getApplicationContext(), "All Good", Toast.LENGTH_SHORT).show();
                     String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
                     String[] projection = {
                             trans.ACCOUNT_NAMES,
                             trans.ACCOUNT_BALANCE
                     };
                     String where = trans.ACCOUNT_NAMES + "=?";
-                    String[] whereArgs = new String[] {String.valueOf(bank_name)};
+                    String[] whereArgs = new String[] {"CASH IN HAND"};
 
                     CursorLoader cursorLoader =  new CursorLoader(getApplicationContext(),
                             trans.CONTENT_BALANCE_URI,
@@ -262,8 +265,8 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                     }
                     cursorLoader.cancelLoad();
                     Log.d("", "Present Balance " + bank_name + " : " + present_balance);
-                    if (present_balance > amount_value){
-                        new_balance = present_balance + amount_value;
+                    if (present_balance >= amount_value){
+                        new_balance = present_balance - amount_value;
                         String[] tables = {
                                 trans.ACCOUNT_NAMES,
                                 trans.ACCOUNT_BALANCE
@@ -277,7 +280,7 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                                 from,
                                 values,
                                 null);
-                        Cursor getdata = cursorLoader.loadInBackground();
+                        Cursor getdata = cursor.loadInBackground();
                         if (getdata != null && getdata.getCount() > 0) {
                             if (getdata.moveToFirst()) {
                                 do {
@@ -311,9 +314,55 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                         }
                         cursorLoader.cancelLoad();
 
+                        String[] bank_projection = {
+                                trans.ACCOUNT_NAMES,
+                                trans.ACCOUNT_BALANCE
+                        };
+                        String bank_where = trans.ACCOUNT_NAMES + "=?";
+                        String[] bank_where_args = new String[] {String.valueOf(bank_name)};
+
+                        CursorLoader bank_cursor =  new CursorLoader(getApplicationContext(),
+                                trans.CONTENT_BALANCE_URI,
+                                bank_projection,
+                                bank_where,
+                                bank_where_args,
+                                null);
+
+                        Cursor get_bank = bank_cursor.loadInBackground();
+                        if (get_bank != null && get_bank.getCount() > 0) {
+                            if (get_bank.moveToFirst()) {
+                                do {
+                                    bank_present_cash = Integer.parseInt(get_bank.getString(1));
+                                } while (get_bank.moveToNext());
+                            }
+                        }
+                        cursorLoader.cancelLoad();
+
+
                         new_cash = previous_cash - amount_value;
 
-                        new_total_bank_balance = total_bank_balance + amount_value;
+                        new_total_bank_balance = total_bank_balance + amount_value + commission_value;
+
+                        int new_bank_total_cash = bank_present_cash + amount_value + commission_value;
+
+                        Log.d("", " " +bank_name + " : " + new_bank_total_cash);
+
+                        ContentValues update_bank_values = new ContentValues();
+                        update_bank_values.put(trans.ACCOUNT_BALANCE, new_bank_total_cash);
+
+                        int bankrowsAffected = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_bank_values, bank_where, bank_where_args);
+
+                        if (bankrowsAffected == 0) {
+                            // If no rows were affected, then there was an error with the update.
+                            Toast.makeText(getApplicationContext(), "Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Otherwise, the update was successful and we can display a toast.
+                            Toast.makeText(getApplicationContext(), "Success",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+
 
                         Log.d("", "New cash " + new_cash + " Total Bank " + new_total_bank_balance);
 
@@ -349,20 +398,20 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                                     Toast.LENGTH_SHORT).show();
                         }
 
-                        ContentValues update_total_cash = new ContentValues();
-                        update_total_cash.put(trans.ACCOUNT_BALANCE, new_cash);
-
-                        int cashUpdated = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_total_cash, cash_where, cash_where_args);
-
-                        if (cashUpdated == 0) {
-                            // If no rows were affected, then there was an error with the update.
-                            Toast.makeText(getApplicationContext(), "Failed",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Otherwise, the update was successful and we can display a toast.
-                            Toast.makeText(getApplicationContext(), "Success",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+//                        ContentValues update_total_cash = new ContentValues();
+//                        update_total_cash.put(trans.ACCOUNT_BALANCE, new_cash);
+//
+//                        int cashUpdated = getContentResolver().update(trans.CONTENT_BALANCE_URI, update_total_cash, cash_where, cash_where_args);
+//
+//                        if (cashUpdated == 0) {
+//                            // If no rows were affected, then there was an error with the update.
+//                            Toast.makeText(getApplicationContext(), "Failed",
+//                                    Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            // Otherwise, the update was successful and we can display a toast.
+//                            Toast.makeText(getApplicationContext(), "Success",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
 
                         ContentValues transaction = new ContentValues();
                         transaction.put(trans.AMOUNT, amount_value);
@@ -370,6 +419,8 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                         transaction.put(trans.TYPE, type);
                         transaction.put(trans.BANK_NAME, bank_name);
                         transaction.put(trans.SERVICE, service_name);
+                        transaction.put(trans.CASH_AT_BANK, total_bank_balance);
+                        transaction.put(trans.CASH_IN_HAND, new_balance);
                         transaction.put(trans.TIME, time);
 
                         Uri newUri = getContentResolver().insert(trans.CONTENT_TRANS_URI, transaction);
@@ -387,10 +438,11 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
                             commisiion.getText().clear();
                             bank.setSelection(0);
                             service.setSelection(0);
+                            finish();
                         }
 
                     }else {
-                        Toast.makeText(getApplicationContext(), " Funds are less in " + bank_name + " account", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), " Cash is less in your hand", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getApplicationContext(), "ADD DETAILS MAN", Toast.LENGTH_SHORT).show();
@@ -485,6 +537,32 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.home_button) {
+            return true;
+        }else if (id == R.id.add_service_button){
+            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+            startActivity(intent);
+        }else if (id == R.id.delete_service_button){
+            return true;
+        }else if (id == R.id.add_bank_option){
+            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+            startActivity(intent);
+        }else if (id == R.id.import_export){
+            Intent intent = new Intent(getApplicationContext(), import_export.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

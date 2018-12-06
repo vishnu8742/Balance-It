@@ -18,4 +18,6 @@
     <string name="export_db">Export DB</string>
     <string name="amount">A M O U N T</string>
     <string name="service">S E R V I C E</string>
+    <string name="cashinbank">CASH IN BANK</string>
+    <string name="cashathand">CASH AT HAND</string>
 </resources>

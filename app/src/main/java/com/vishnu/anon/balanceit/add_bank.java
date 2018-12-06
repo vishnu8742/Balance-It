@@ -1,6 +1,7 @@
 package com.vishnu.anon.balanceit;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +31,7 @@ public class add_bank extends AppCompatActivity {
     EditText bank_name, amount;
     EditText service_name;
     RelativeLayout layout;
-    int total_balance;
+    int total_balance, total_cash;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,8 +135,32 @@ public class add_bank extends AppCompatActivity {
             }
         }
         cursor.cancelLoad();
-
         int total_in_bank = initamount + total_balance;
+
+        String[] cash_tables = {
+                trans.ACCOUNT_NAMES,
+                trans.ACCOUNT_BALANCE
+        };
+        String cash_from = trans.ACCOUNT_NAMES + "=?";
+        String[] cash_args = new String[] {"CASH IN HAND"};
+
+        CursorLoader cursor2 =  new CursorLoader(getApplicationContext(),
+                trans.CONTENT_BALANCE_URI,
+                tables,
+                from,
+                bank_amount,
+                null);
+        Cursor getcash = cursor2.loadInBackground();
+        if (getcash != null && getcash.getCount() > 0) {
+            if (getcash.moveToFirst()) {
+                do {
+                    total_cash = Integer.parseInt(getcash.getString(1));
+                } while (getcash.moveToNext());
+            }
+        }
+        cursor2.cancelLoad();
+
+
 
         ContentValues update_values = new ContentValues();
         update_values.put(trans.ACCOUNT_BALANCE, total_in_bank);
@@ -157,6 +183,8 @@ public class add_bank extends AppCompatActivity {
         transaction.put(trans.TYPE, "Bank Added");
         transaction.put(trans.BANK_NAME, bank);
         transaction.put(trans.SERVICE, "None");
+        transaction.put(trans.CASH_AT_BANK, total_in_bank);
+        transaction.put(trans.CASH_IN_HAND, total_cash);
         transaction.put(trans.TIME, time);
 
         Uri transAdd = getContentResolver().insert(trans.CONTENT_TRANS_URI, transaction);
@@ -201,5 +229,31 @@ public class add_bank extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.home_button) {
+            return true;
+        }else if (id == R.id.add_service_button){
+            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+            startActivity(intent);
+        }else if (id == R.id.delete_service_button){
+            return true;
+        }else if (id == R.id.add_bank_option){
+            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+            startActivity(intent);
+        }else if (id == R.id.import_export){
+            Intent intent = new Intent(getApplicationContext(), import_export.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

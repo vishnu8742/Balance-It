@@ -30,6 +30,8 @@ public class db_helper extends SQLiteOpenHelper {
                 + db_contract.trans.TYPE + " TEXT NOT NULL, "
                 + db_contract.trans.BANK_NAME + " TEXT NOT NULL, "
                 + db_contract.trans.SERVICE + " TEXT NOT NULL, "
+                + db_contract.trans.CASH_IN_HAND + " TEXT NOT NULL, "
+                + db_contract.trans.CASH_AT_BANK + " TEXT NOT NULL, "
                 + db_contract.trans.TIME + " TEXT NOT NULL);";
 
         // Create a String that contains the SQL statement to create the  table

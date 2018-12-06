@@ -1,20 +1,27 @@
 package com.vishnu.anon.balanceit;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.CursorLoader;
+
+import android.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView;
 
 import com.vishnu.anon.balanceit.data.db_contract;
 
@@ -23,7 +30,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>  {
+
+    BanksAdapter banksAdapter;
+
+    private static final int bankloader = 1001;
+
+    boolean added = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        ListView bankslist = (ListView) findViewById(R.id.list_view);
+        banksAdapter = new BanksAdapter(this, null);
+        bankslist.setAdapter(banksAdapter);
+
+
     }
     private void CheckBanks(){
         Log.d("CheckBanks", "CheckBanks: ");
@@ -63,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("", "add bank ");
             AddBank();
         }
-        cursor.cancelLoad();
         cursor1.close();
     }
 
@@ -86,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("", "add serv");
             AddService();
         }
-        cursor.cancelLoad();
         cursor2.close();
     }
     private void CheckAccounts(){
@@ -107,8 +124,10 @@ public class MainActivity extends AppCompatActivity {
         if (cursor3 == null || cursor3.getCount() < 1){
             Log.d("", "add bank ");
             AddAccount();
+        }else {
+            added = true;
+            initLoader();
         }
-        cursor.cancelLoad();
         cursor3.close();
     }
 
@@ -139,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(getApplicationContext(), "Default Sections Added", Toast.LENGTH_SHORT).show();
+                added = true;
+                initLoader();
             }
         }
     }
@@ -179,6 +200,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void initLoader(){
+        if (added){
+            getLoaderManager().initLoader(bankloader, null, this);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -210,5 +237,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        String[] projection = {
+                db_contract.trans._ID,
+                db_contract.trans.ACCOUNT_NAMES,
+                db_contract.trans.ACCOUNT_BALANCE
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                db_contract.trans.CONTENT_BALANCE_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished( Loader<Cursor> loader, Cursor cursor) {
+        banksAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset( Loader<Cursor> loader) {
+        banksAdapter.swapCursor(null);
     }
 }
