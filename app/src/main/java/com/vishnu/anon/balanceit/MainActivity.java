@@ -222,7 +222,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.home_button) {
-            return true;
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         }else if (id == R.id.add_service_button){
             Intent intent = new Intent(getApplicationContext(), add_bank.class);
             startActivity(intent);
