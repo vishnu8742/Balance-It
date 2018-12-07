@@ -7,20 +7,16 @@
         android:orderInCategory="100"
         android:title="@string/home"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/add_service_button"
-        android:orderInCategory="100"
-        android:title="@string/add_section"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/add_bank_option"
         android:orderInCategory="100"
         android:title="@string/add_bank"
-        app:showAsAction="never" />
+    app:showAsAction="never" />
     <item
-        android:id="@+id/delete_service_button"
+        android:id="@+id/transactions"
         android:orderInCategory="100"
-        android:title="@string/delete_section"
+        android:title="@string/transactions"
         app:showAsAction="never" />
     <item
         android:id="@+id/import_export"

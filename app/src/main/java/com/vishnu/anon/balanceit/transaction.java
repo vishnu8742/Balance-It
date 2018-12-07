@@ -533,9 +533,9 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
 
                         String[] cash_tables = {trans.ACCOUNT_NAMES, trans.ACCOUNT_BALANCE};
                         String cash_from = trans.ACCOUNT_NAMES + "=?";
-                        String[] cash_values = new String[]{"CASH AT BANK"};
+                        String[] cash_values = new String[]{"CASH IN HAND"};
 
-                        CursorLoader cash_cursor = new CursorLoader(getApplicationContext(), trans.CONTENT_BALANCE_URI, tables, from, values, null);
+                        CursorLoader cash_cursor = new CursorLoader(getApplicationContext(), trans.CONTENT_BALANCE_URI, cash_tables, cash_from, cash_values, null);
                         Cursor cashdata = cash_cursor.loadInBackground();
                         if (cashdata != null && cashdata.getCount() > 0) {
                             if (cashdata.moveToFirst()) {
@@ -750,11 +750,9 @@ public class transaction extends AppCompatActivity implements AdapterView.OnItem
         if (id == R.id.home_button) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-        }else if (id == R.id.add_service_button){
-            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+        }else if (id == R.id.transactions){
+            Intent intent = new Intent(getApplicationContext(), trans_list.class);
             startActivity(intent);
-        }else if (id == R.id.delete_service_button){
-            return true;
         }else if (id == R.id.add_bank_option){
             Intent intent = new Intent(getApplicationContext(), add_bank.class);
             startActivity(intent);

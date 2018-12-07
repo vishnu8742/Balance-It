@@ -25,7 +25,7 @@
                     android:id="@+id/banknameid"
                     android:textStyle="bold"
                     android:padding="10dp"
-                    android:textColor="@color/green"
+                    android:textColor="@color/red"
                     />
                 <TextView
                     android:layout_width="match_parent"

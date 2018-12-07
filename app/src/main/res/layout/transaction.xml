@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/withdraw_button"
                 android:background="@color/red"
-                android:text="@string/withdrawal"
+                android:text= "@string/withdrawal"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 />

@@ -185,11 +185,9 @@ public class import_export extends AppCompatActivity {
         if (id == R.id.home_button) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-        }else if (id == R.id.add_service_button){
-            Intent intent = new Intent(getApplicationContext(), add_bank.class);
+        }else if (id == R.id.transactions){
+            Intent intent = new Intent(getApplicationContext(), trans_list.class);
             startActivity(intent);
-        }else if (id == R.id.delete_service_button){
-            return true;
         }else if (id == R.id.add_bank_option){
             Intent intent = new Intent(getApplicationContext(), add_bank.class);
             startActivity(intent);

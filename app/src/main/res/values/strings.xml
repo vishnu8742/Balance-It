@@ -14,6 +14,7 @@
     <string name="bank">B A N K</string>
     <string name="transaction">Make A Transaction</string>
     <string name="add_bank">Add Bank/Source</string>
+    <string name="transactions">Transactions</string>
     <string name="import_db">Import/Export DB</string>
     <string name="export_db">Export DB</string>
     <string name="amount">A M O U N T</string>
