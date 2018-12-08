@@ -23,7 +23,9 @@ import com.vishnu.anon.balanceit.data.db_contract.trans;
 
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class add_bank extends AppCompatActivity {
@@ -55,11 +57,10 @@ public class add_bank extends AppCompatActivity {
               }else if(bank.isEmpty() && !service.isEmpty()){
                  AddService(service);
               }else if (!bank.isEmpty() && service.isEmpty()){
-                  AddBank(bank);
-                  AddBankBalance(bank, initamount);
+                  AddBank(bank, initamount);
+
               }else if (!bank.isEmpty() && !service.isEmpty()){
-                 AddBank(bank);
-                 AddBankBalance(bank, initamount);
+                 AddBank(bank, initamount);
                  AddService(service);
               }
 
@@ -67,26 +68,53 @@ public class add_bank extends AppCompatActivity {
         });
     }
 
-    private void AddBank(String bank){
-        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
-        bank = bank.toUpperCase();
-        ContentValues values = new ContentValues();
-        values.put(trans.BANK_NAMES, bank);
-        values.put(trans.TIME, time);
-        Uri newUri = getContentResolver().insert(trans.CONTENT_BANK_URI, values);
+    private void AddBank(String bank, int initamount){
+        List<String> banks = new ArrayList<>();
 
-        // Show a toast message depending on whether or not the insertion was successful.
-        if (newUri == null) {
-            // If the new content URI is null, then there was an error with insertion.
-            Toast.makeText(getApplicationContext(), "Failed",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the insertion was successful and we can display a toast.
-            Toast.makeText(getApplicationContext(),"Success",
-                    Toast.LENGTH_SHORT).show();
-            bank_name.getText().clear();
-            amount.setText("0");
-            service_name.getText().clear();
+        String[] projection = {
+                trans.BANK_NAMES
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        CursorLoader cursor = new CursorLoader(this,   // Parent activity context
+                trans.CONTENT_BANK_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);
+
+        Cursor c = cursor.loadInBackground();
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                do {
+                    banks.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+        }
+
+        if(!banks.contains(bank)) {
+
+            String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+            bank = bank.toUpperCase();
+            ContentValues values = new ContentValues();
+            values.put(trans.BANK_NAMES, bank);
+            values.put(trans.TIME, time);
+            Uri newUri = getContentResolver().insert(trans.CONTENT_BANK_URI, values);
+
+            // Show a toast message depending on whether or not the insertion was successful.
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(getApplicationContext(), ""+ bank +"Added Successfully", Toast.LENGTH_SHORT).show();
+                AddBankBalance(bank, initamount);
+                bank_name.getText().clear();
+                amount.setText("0");
+                service_name.getText().clear();
+            }
+        }else {
+            Toast.makeText(this, "This " + bank +" Is alredy added", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -106,7 +134,7 @@ public class add_bank extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else {
             // Otherwise, the insertion was successful and we can display a toast.
-            Toast.makeText(getApplicationContext(),"Success",
+            Toast.makeText(getApplicationContext(),""+ initamount +"Added Successfully",
                     Toast.LENGTH_SHORT).show();
             bank_name.getText().clear();
             amount.setText("0");
@@ -173,7 +201,7 @@ public class add_bank extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else {
             // Otherwise, the update was successful and we can display a toast.
-            Toast.makeText(getApplicationContext(), "Success",
+            Toast.makeText(getApplicationContext(), "success",
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -202,25 +230,52 @@ public class add_bank extends AppCompatActivity {
     }
 
     private void AddService(String service){
-        String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
-        service = service.toUpperCase();
-        ContentValues values = new ContentValues();
-        values.put(trans.SECTIONS, service);
-        values.put(trans.TIME, time);
-        Uri newUri = getContentResolver().insert(trans.CONTENT_SERV_URI, values);
 
-        // Show a toast message depending on whether or not the insertion was successful.
-        if (newUri == null) {
-            // If the new content URI is null, then there was an error with insertion.
-            Toast.makeText(getApplicationContext(), "Failed" ,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the insertion was successful and we can display a toast.
-            Toast.makeText(getApplicationContext(),"Success",
-                    Toast.LENGTH_SHORT).show();
-            bank_name.getText().clear();
-            amount.setText("0");
-            service_name.getText().clear();
+        List<String> services = new ArrayList<>();
+
+        String[] projection = {
+                trans.SECTIONS
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        CursorLoader cursor = new CursorLoader(this,   // Parent activity context
+                trans.CONTENT_SERV_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);
+
+        Cursor c = cursor.loadInBackground();
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                do {
+                    services.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+        }
+
+        if(!services.contains(service)) {
+
+            String time = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss").format(new Date());
+            service = service.toUpperCase();
+            ContentValues values = new ContentValues();
+            values.put(trans.SECTIONS, service);
+            values.put(trans.TIME, time);
+            Uri newUri = getContentResolver().insert(trans.CONTENT_SERV_URI, values);
+
+            // Show a toast message depending on whether or not the insertion was successful.
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(getApplicationContext(), ""+ service +"Added Successfully", Toast.LENGTH_SHORT).show();
+                bank_name.getText().clear();
+                amount.setText("0");
+                service_name.getText().clear();
+            }
+        }else {
+            Toast.makeText(this, "This " + service +" Is alredy added", Toast.LENGTH_SHORT).show();
         }
     }
 
