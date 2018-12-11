@@ -54,15 +54,15 @@ public class filter_ extends AppCompatActivity implements AdapterView.OnItemSele
                 to_date = todate.getText().toString().trim();
 
                 if (bank_name.equals("SELECT BANK")) {
-                    bank_name = null;
+                    bank_name = "";
                 }
                 if (type_name.equals("SELECT TYPE")) {
-                    type_name = null;
+                    type_name = "";
                 }
 
                 if (from_date.isEmpty() || to_date.isEmpty()) {
-                    from_date = null;
-                    to_date = null;
+                    from_date = "";
+                    to_date = "";
                 }
 
                 Intent intent = new Intent(getApplicationContext(), trans_list.class);
