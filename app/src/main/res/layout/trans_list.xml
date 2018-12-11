@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     >
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:text="Amount"
         android:padding="5dp"
@@ -14,7 +15,8 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/transamount"
         android:layout_toRightOf="@id/transamount"
@@ -25,7 +27,8 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/transcommission"
         android:layout_toRightOf="@id/transcommission"
@@ -36,7 +39,8 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/transbank"
         android:layout_toRightOf="@id/transbank"
@@ -48,8 +52,9 @@
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/transservice"
         android:layout_toRightOf="@id/transservice"
         android:id="@+id/transcashinhand"
@@ -59,20 +64,22 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/transcashinhand"
         android:layout_toRightOf="@id/transcashinhand"
         android:id="@+id/transcashatbank"
-        android:text="@string/cash_at_bank"
+        android:text="Bank"
         android:padding="5dp"
         android:textSize="14dp"
         android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/transcashatbank"
         android:layout_toRightOf="@id/transcashatbank"
         android:id="@+id/transdate"

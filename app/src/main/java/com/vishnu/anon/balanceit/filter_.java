@@ -145,6 +145,8 @@ public class filter_ extends AppCompatActivity implements AdapterView.OnItemSele
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+            bank_name = "SELECT BANK";
 
+            type_name = "SELECT TYPE";
     }
 }

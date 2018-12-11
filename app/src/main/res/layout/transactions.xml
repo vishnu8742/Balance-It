@@ -6,8 +6,9 @@
     android:layout_marginTop="20sp"
     >
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="200000"
         android:padding="5dp"
         android:textSize="14dp"
@@ -15,8 +16,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_amount"
         android:layout_toRightOf="@id/id_amount"
         android:text="20"
@@ -26,8 +28,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_commission"
         android:layout_toRightOf="@id/id_commission"
         android:text="STATE BANK OF INDIA"
@@ -37,8 +40,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_bank"
         android:layout_toRightOf="@id/id_bank"
         android:text="E-Seva"
@@ -48,8 +52,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_service"
         android:layout_toRightOf="@id/id_service"
         android:text="15000"
@@ -59,8 +64,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_cashinhand"
         android:layout_toRightOf="@id/id_cashinhand"
         android:text="75000"
@@ -70,8 +76,9 @@
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_toEndOf="@id/id_cashatbank"
         android:layout_toRightOf="@id/id_cashatbank"
         android:text="2018/12/31 23-59-59"

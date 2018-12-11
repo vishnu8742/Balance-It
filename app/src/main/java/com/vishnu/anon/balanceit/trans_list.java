@@ -72,6 +72,8 @@ public class trans_list extends AppCompatActivity implements LoaderManager.Loade
 
         if(!type_name.isEmpty() && !bank_name.isEmpty() && !from_date.isEmpty() && !to_date.isEmpty()) {
 
+            from_date = from_date + " 00-00-00"; to_date = to_date + " 23-59-59";
+
             where = db_contract.trans.TYPE + "=? AND " + db_contract.trans.BANK_NAME + "=? AND " + db_contract.trans.TIME+ ">=? AND " + db_contract.trans.TIME + "<=?";
 
             whereArgs = new String[]{type_name, bank_name, from_date, to_date};
@@ -82,7 +84,6 @@ public class trans_list extends AppCompatActivity implements LoaderManager.Loade
 
             whereArgs = new String[]{type_name, bank_name};
 
-            Log.d("", "getIncomingIntent: " + whereArgs.length + type_name + bank_name);
 
         }else if(!type_name.isEmpty() && bank_name.isEmpty() && from_date.isEmpty() && to_date.isEmpty()) {
 
@@ -96,16 +97,32 @@ public class trans_list extends AppCompatActivity implements LoaderManager.Loade
 
             whereArgs = new String[]{String.valueOf(bank_name)};
 
-            Log.d("", "getIncomingIntent: " + whereArgs.length  + bank_name);
-
         }else if (type_name.isEmpty() && bank_name.isEmpty() && !from_date.isEmpty() && !to_date.isEmpty()){
 
-            where = db_contract.trans.TIME + ">=? AND" + db_contract.trans.TIME + "<=?";
+            from_date = from_date + " 00-00-00"; to_date = to_date + " 23-59-59";
+
+            where = db_contract.trans.TIME + ">=? AND " + db_contract.trans.TIME + "<=?";
 
             whereArgs = new String[]{from_date, to_date};
 
-        }else if (type_name.isEmpty() && bank_name.isEmpty() && from_date.isEmpty() && to_date.isEmpty()) {
+        }else if(!type_name.isEmpty() && bank_name.isEmpty() && !from_date.isEmpty() && !to_date.isEmpty()){
 
+            from_date = from_date + " 00-00-00"; to_date = to_date + " 23-59-59";
+
+            where = db_contract.trans.TYPE + "=? AND "  + db_contract.trans.TIME+ ">=? AND " + db_contract.trans.TIME + "<=?";
+
+            whereArgs = new String[]{type_name, from_date, to_date};
+
+
+        } else if(type_name.isEmpty() && !bank_name.isEmpty() && !from_date.isEmpty() && !to_date.isEmpty()){
+
+            from_date = from_date + " 00-00-00"; to_date = to_date + " 23-59-59";
+
+            where = db_contract.trans.BANK_NAME + "=? AND "  + db_contract.trans.TIME+ ">=? AND " + db_contract.trans.TIME + "<=?";
+
+            whereArgs = new String[]{bank_name, from_date, to_date};
+
+        }else {
             where = null;
 
             whereArgs = null;

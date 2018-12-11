@@ -67,7 +67,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
+                android:inputType="date"
                 android:textColor="@color/colorAccent"
                 android:gravity="right"
                 android:hint="2018/12/01"
@@ -88,7 +88,7 @@
                 android:gravity="right"
                 android:textColor="@color/colorAccent"
                 android:id="@+id/todate"
-                android:inputType="numberDecimal"
+                android:inputType="date"
                 android:layout_below="@id/line4"
                 android:hint="2018/12/31"
                 />

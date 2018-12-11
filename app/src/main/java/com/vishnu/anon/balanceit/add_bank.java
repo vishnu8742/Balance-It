@@ -174,9 +174,9 @@ public class add_bank extends AppCompatActivity {
 
         CursorLoader cursor2 =  new CursorLoader(getApplicationContext(),
                 trans.CONTENT_BALANCE_URI,
-                tables,
-                from,
-                bank_amount,
+                cash_tables,
+                cash_from,
+                cash_args,
                 null);
         Cursor getcash = cursor2.loadInBackground();
         if (getcash != null && getcash.getCount() > 0) {
