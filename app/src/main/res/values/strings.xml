@@ -20,5 +20,6 @@
     <string name="amount">A M O U N T</string>
     <string name="service">S E R V I C E</string>
     <string name="cashinbank">CASH IN BANK</string>
+    <string name="filtering">F I L T E R</string>
     <string name="cashathand">CASH AT HAND</string>
 </resources>

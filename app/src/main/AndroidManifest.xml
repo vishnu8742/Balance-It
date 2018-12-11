@@ -66,6 +66,18 @@
                android:value="com.vishnu.anon.balanceit.MainActivity" />
 
        </activity>
+        <activity android:name=".filter_"
+            android:screenOrientation="portrait"
+            >
+
+            android:parentActivityName="com.vishnu.anon.balanceit.MainActivity" >
+
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vishnu.anon.balanceit.MainActivity" />
+
+        </activity>
         <provider
             android:name=".data.db_provider"
             android:authorities="com.vishnu.anon.balanceit.bank"

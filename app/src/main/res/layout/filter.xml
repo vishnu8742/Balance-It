@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/filtercard"
+        app:cardCornerRadius="5sp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/line1"
+                android:text="@string/bank"
+                android:textColor="@color/green"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="14dp"
+
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/bank_spinner"
+                android:spinnerMode="dialog"
+                android:focusedByDefault="true"
+                android:layout_below="@id/line1"
+                >
+
+            </Spinner>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/line2"
+                android:layout_below="@id/bank_spinner"
+                android:text="T R A N S A C T I O N    T Y P E"
+                android:textColor="@color/green"
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/type_spinner"
+                android:spinnerMode="dialog"
+                android:focusedByDefault="true"
+                android:layout_below="@id/line2"
+                >
+
+            </Spinner>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/line3"
+                android:layout_below="@id/type_spinner"
+                android:text="F R O M    D A T E"
+                android:textColor="@color/green"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorAccent"
+                android:gravity="right"
+                android:hint="2018/12/01"
+                android:layout_below="@+id/line3"
+                android:id="@+id/fromdate"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/line4"
+                android:layout_below="@id/fromdate"
+                android:text="T O   D A T E"
+                android:textColor="@color/green"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/colorAccent"
+                android:id="@+id/todate"
+                android:inputType="numberDecimal"
+                android:layout_below="@id/line4"
+                android:hint="2018/12/31"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/todate"
+                android:background="@color/green"
+                android:textColor="@color/white"
+                android:id="@+id/filterbutton"
+                android:text="F I L T E R"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
